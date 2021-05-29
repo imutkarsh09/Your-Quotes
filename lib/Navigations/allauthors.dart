@@ -5,13 +5,13 @@ import "package:http/http.dart" as http;
 import 'package:yourquotes/Loaders/loading.dart';
 import 'package:yourquotes/Navigations/showQuotes.dart';
 
-class Genres extends StatefulWidget {
+class Authors extends StatefulWidget {
   @override
-  _GenresState createState() => _GenresState();
+  _AuthorsState createState() => _AuthorsState();
 }
 
-class _GenresState extends State<Genres> {
-  final String url = "https://quote-garden.herokuapp.com/api/v3/genres";
+class _AuthorsState extends State<Authors> {
+  final String url = "https://quote-garden.herokuapp.com/api/v3/authors";
   List data = [];
   @override
   void initState() {

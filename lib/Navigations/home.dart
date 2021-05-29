@@ -3,7 +3,9 @@ import 'dart:convert';
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import 'package:yourquotes/Loaders/loading.dart';
+import 'package:yourquotes/Navigations/allauthors.dart';
 import 'package:yourquotes/Navigations/allgenres.dart';
+import 'package:yourquotes/Navigations/showQuotes.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -50,6 +52,14 @@ class _HomeState extends State<Home> {
       "fitness",
       "inspirational",
       "relationship"
+    ];
+    List trendauthors = [
+      "Abdul Kalam",
+      "Albert Einstein",
+      "Bill Gates",
+      "Charles Dickens",
+      "Jackie Chan",
+      "Jeff Bezos"
     ];
     return data.length == 0
         ? Loader()
@@ -121,9 +131,10 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Container(
-                          height: 60,
+                          height: 50,
                           width: double.infinity,
-                          // color: Colors.yellow,
+                          // color: Colors.red,
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Center(
                             child: Text(
                               "Quote Of The Day",
@@ -136,7 +147,7 @@ class _HomeState extends State<Home> {
                             ),
                           )),
                       Padding(
-                        padding: const EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
                         child: Container(
                           // color: Colors.yellow,
                           child: Wrap(
@@ -219,7 +230,12 @@ class _HomeState extends State<Home> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    print(trendgenres[index]);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                ShowQuotes(
+                                                    genre: trendgenres[index],
+                                                    author: "")));
                                   },
                                   child: Container(
                                     height: 85,
@@ -245,7 +261,101 @@ class _HomeState extends State<Home> {
                               ],
                             ),
                           );
-                        })))
+                        }))),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "Trending Authors",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Baloo",
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => Authors()));
+                        },
+                        child: Text(
+                          "See More",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontFamily: "Baloo",
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                    width: double.infinity,
+                    // color: Colors.yellow,
+                    child: Wrap(
+                        alignment: WrapAlignment.spaceEvenly,
+                        children: List.generate(6, (index) {
+                          String gen = trendauthors[index];
+                          return Container(
+                            height: 125,
+                            width: 110,
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 1.0),
+                                    blurRadius: 6.0,
+                                  ),
+                                ]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                ShowQuotes(
+                                                    genre: "",
+                                                    author:
+                                                        trendauthors[index])));
+                                  },
+                                  child: Container(
+                                    height: 85,
+                                    width: 85,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image(
+                                        image: AssetImage(
+                                            "Images/Author_Images/${trendauthors[index]}.jpg"),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  gen,
+                                  style: TextStyle(
+                                    fontFamily: "Baloo",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }))),
               ],
             ),
           ));
