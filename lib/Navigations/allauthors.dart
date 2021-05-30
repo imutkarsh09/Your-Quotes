@@ -50,7 +50,7 @@ class _AuthorsState extends State<Authors> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) => ShowQuotes(
-                                    author: "", genre: data[index])));
+                                    author: data[index], genre: "")));
                           },
                           child: Container(
                             padding: EdgeInsets.all(20),

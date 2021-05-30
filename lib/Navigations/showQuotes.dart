@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import 'dart:convert';
-
+import 'package:share/share.dart';
 import 'package:yourquotes/Loaders/loading.dart';
 
 class ShowQuotes extends StatefulWidget {
@@ -18,8 +20,9 @@ class ShowQuotes extends StatefulWidget {
 
 class _ShowQuotesState extends State<ShowQuotes> {
   int page = 1;
+  int r = 1;
+  bool _isLiked = false;
   List data = [];
-
   @override
   void initState() {
     getJsonData();
@@ -44,12 +47,18 @@ class _ShowQuotesState extends State<ShowQuotes> {
       data = convertDataToJson["data"];
       print("Data is--->");
       print(data);
+      Random rnd = new Random();
+      int min = 1;
+      int max = 6;
+      r = min + rnd.nextInt(max - min);
+      print("r is----->$r");
     });
     return "Success";
   }
 
   @override
   Widget build(BuildContext context) {
+    print("r here is--->$r");
     return data.length == 0
         ? Loader()
         : Scaffold(
@@ -64,64 +73,168 @@ class _ShowQuotesState extends State<ShowQuotes> {
                   fit: BoxFit.cover,
                   colorFilter: new ColorFilter.mode(
                       Colors.black.withOpacity(0.9), BlendMode.dstATop),
-                  image: AssetImage("Images/Background_Images/Background.jpg"),
+                  image:
+                      AssetImage("Images/Background_Images/Background_$r.jpg"),
                 )),
               ),
               Container(
                 height: MediaQuery.of(context).size.height,
                 width: double.infinity,
-                color: Colors.red,
+                // color: Colors.red,
                 child: Column(
                   children: [
                     SafeArea(
                       child: Container(
                           height: 40,
                           width: double.infinity,
-                          color: Colors.yellow,
+                          // color: Colors.yellow,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: IconButton(
-                              icon: Icon(Icons.arrow_back),
+                              alignment: Alignment.centerLeft,
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
                             ),
                           )),
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height / 1.4,
-                      width: double.infinity,
-                      color: Colors.blue,
-                      child: Wrap(
-                        children: [
-                          Text(
-                            data[0]["quoteText"],
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Baloo",
-                              fontSize: 25,
-                            ),
-                          )
-                        ],
+                    InkWell(
+                      onDoubleTap: () {
+                        setState(() {
+                          _isLiked = !_isLiked;
+                        });
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 1.4,
+                        width: double.infinity,
+                        // color: Colors.blue,
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              Text(
+                                data[0]["quoteText"],
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Baloo",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(30.0),
+                                child: Text(
+                                  data[0]["quoteAuthor"],
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Baloo",
+                                      fontSize: 16),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_left),
-                          onPressed: () {
-                            page = page + 1;
-                            getJsonData();
-                          },
+                        ClipOval(
+                          child: Material(
+                            color: Colors.transparent, // button color
+                            child: InkWell(
+                              splashColor: Colors.white, // inkwell color
+                              child: SizedBox(
+                                width: 56,
+                                height: 56,
+                                child: Icon(
+                                  Icons.arrow_left,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                              ),
+                              onTap: () {
+                                if (page > 1) {
+                                  page = page - 1;
+                                  _isLiked = false;
+                                  getJsonData();
+                                }
+                              },
+                            ),
+                          ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            if (page > 1) {
-                              page = page - 1;
-                              getJsonData();
-                            }
-                          },
-                          icon: Icon(Icons.arrow_right),
+                        ClipOval(
+                          child: Material(
+                            color: Colors.transparent, // button color
+                            child: InkWell(
+                              splashColor: Colors.white, // inkwell color
+                              child: SizedBox(
+                                width: 56,
+                                height: 56,
+                                child: _isLiked
+                                    ? Icon(Icons.favorite,
+                                        color: Colors.red, size: 25)
+                                    : Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.white,
+                                        size: 25,
+                                      ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isLiked = !_isLiked;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        ClipOval(
+                          child: Material(
+                            color: Colors.transparent, // button color
+                            child: InkWell(
+                              splashColor: Colors.white, // inkwell color
+                              child: SizedBox(
+                                  width: 56,
+                                  height: 56,
+                                  child: Icon(
+                                    Icons.share_outlined,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )),
+                              onTap: () {
+                                String msg = data[0]["quoteText"].toString();
+                                share(context, msg);
+                              },
+                            ),
+                          ),
+                        ),
+                        ClipOval(
+                          child: Material(
+                            color: Colors.transparent, // button color
+                            child: InkWell(
+                              splashColor: Colors.white, // inkwell color
+                              child: SizedBox(
+                                  width: 56,
+                                  height: 56,
+                                  child: Icon(
+                                    Icons.arrow_right,
+                                    color: Colors.white,
+                                    size: 40,
+                                  )),
+                              onTap: () {
+                                page = page + 1;
+                                _isLiked = false;
+                                getJsonData();
+                              },
+                            ),
+                          ),
                         )
                       ],
                     )
@@ -130,5 +243,13 @@ class _ShowQuotesState extends State<ShowQuotes> {
               ),
             ],
           ));
+  }
+
+  share(BuildContext context, String msg) {
+    final RenderBox box = context.findRenderObject();
+
+    Share.share("$msg",
+        subject: "Quote",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }
