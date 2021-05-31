@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import 'package:yourquotes/Loaders/loading.dart';
 import 'package:yourquotes/Navigations/allauthors.dart';
 import 'package:yourquotes/Navigations/allgenres.dart';
 import 'package:yourquotes/Navigations/showQuotes.dart';
+import "package:yourquotes/Searching/search.dart";
 
 class Home extends StatefulWidget {
   @override
@@ -15,12 +15,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final String url =
       "https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=motivational";
+  final String urlgenre = "https://quote-garden.herokuapp.com/api/v3/genres";
+  final String urlauthor = "https://quote-garden.herokuapp.com/api/v3/authors";
   List data = [];
+  List genredata = [];
+  List authordata = [];
 
   @override
   void initState() {
     super.initState();
     getJsonData();
+    getGenreData();
+    getAuthorData();
   }
 
   Future<String> getJsonData() async {
@@ -38,6 +44,32 @@ class _HomeState extends State<Home> {
       print(" Length ----> ");
       // print(data[1].runtimeType);
       print(data.length);
+    });
+    return "Success";
+  }
+
+  Future<String> getGenreData() async {
+    var response = await http.get(
+      Uri.parse(urlgenre),
+      headers: {"Accept": "application/json"},
+    );
+    print(response.body);
+    setState(() {
+      var convertDataToJson = jsonDecode(response.body);
+      genredata = convertDataToJson["data"];
+    });
+    return "Success";
+  }
+
+  Future<String> getAuthorData() async {
+    var response = await http.get(
+      Uri.parse(urlauthor),
+      headers: {"Accept": "application/json"},
+    );
+    print(response.body);
+    setState(() {
+      var convertDataToJson = jsonDecode(response.body);
+      authordata = convertDataToJson["data"];
     });
     return "Success";
   }
@@ -125,6 +157,37 @@ class _HomeState extends State<Home> {
                                   ),
                                   onPressed: () {
                                     print(sercontroller.text);
+                                    // search(sercontroller.text);
+                                    print("hello bhaiya yahan hai hum");
+                                    print(genredata.runtimeType);
+                                    String gen_here =
+                                        sercontroller.text.toLowerCase();
+                                    bool gen =
+                                        binary_Search(genredata, gen_here);
+                                    String aut_here = convertToTitleCase(
+                                        sercontroller.text.toLowerCase());
+                                    print("Auth Here---->$aut_here");
+                                    bool aut =
+                                        binary_Search(authordata, aut_here);
+                                    if (gen == true) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ShowQuotes(
+                                                      author: "",
+                                                      genre:
+                                                          sercontroller.text)));
+                                    } else if (aut == true) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ShowQuotes(
+                                                      author:
+                                                          sercontroller.text,
+                                                      genre: "")));
+                                    } else {
+                                      showAlertDialog(context);
+                                    }
                                   })
                             ],
                           ),
@@ -359,5 +422,59 @@ class _HomeState extends State<Home> {
               ],
             ),
           ));
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Alert"),
+      content: Text("Please enter correct author or genre."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  String convertToTitleCase(String text) {
+    if (text == null) {
+      return null;
+    }
+
+    if (text.length <= 1) {
+      return text.toUpperCase();
+    }
+
+    // Split string into multiple words
+    final List<dynamic> words = text.split(' ');
+
+    // Capitalize first letter of each words
+    final capitalizedWords = words.map((word) {
+      if (word.trim().isNotEmpty) {
+        final String firstLetter = word.trim().substring(0, 1).toUpperCase();
+        final String remainingLetters = word.trim().substring(1);
+
+        return '$firstLetter$remainingLetters';
+      }
+      return '';
+    });
+
+    // Join/Merge all words back to one String
+    return capitalizedWords.join(' ');
   }
 }
