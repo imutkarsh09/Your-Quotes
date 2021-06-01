@@ -9,9 +9,12 @@ class Loader extends StatefulWidget {
 class _LoaderState extends State<Loader> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SpinKitWave(
-        color: Colors.white,
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: SpinKitWave(
+          color: Colors.blue,
+        ),
       ),
     );
   }
