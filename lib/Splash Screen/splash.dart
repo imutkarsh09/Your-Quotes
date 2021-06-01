@@ -17,10 +17,14 @@ class _SplashScreenState extends State<SplashScreen> {
             MaterialPageRoute(builder: (BuildContext context) => Home())));
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text("This is splash screen"),
+          body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Image(
+          image: AssetImage("Images/Splash_Image/Splash.jpg"),
+          fit: BoxFit.cover,
         ),
-      ),
+      )),
     );
   }
 }

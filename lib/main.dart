@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'Splash Screen/splash.dart';
+import 'package:yourquotes/Splash%20Screen/splash.dart';
 
 void main() async {
   runApp(MyApp());
