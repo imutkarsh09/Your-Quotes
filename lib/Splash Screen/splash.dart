@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
         () => Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (BuildContext context) => Home())));
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           body: Container(
         height: MediaQuery.of(context).size.height,

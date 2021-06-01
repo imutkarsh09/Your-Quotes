@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:yourquotes/Splash%20Screen/splash.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(MyApp());
 }
 

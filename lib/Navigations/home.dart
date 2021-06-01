@@ -200,7 +200,7 @@ class _HomeState extends State<Home> {
                           padding: EdgeInsets.only(top: 5, bottom: 5),
                           child: Center(
                             child: Text(
-                              "Quote Of The Day",
+                              "Quote Of The Moment",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 30,

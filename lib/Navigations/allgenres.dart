@@ -1,5 +1,6 @@
 import 'dart:convert';
 import "dart:core";
+import 'dart:math';
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import 'package:yourquotes/Loaders/loading.dart';
@@ -80,6 +81,10 @@ class _GenresState extends State<Genres> {
                         child: Wrap(
                             alignment: WrapAlignment.spaceEvenly,
                             children: List.generate(data.length, (index) {
+                              Random rnd = new Random();
+                              int min = 1;
+                              int max = 7;
+                              int r = min + rnd.nextInt(max - min);
                               String gen = data[index];
                               gen = gen[0].toUpperCase() + gen.substring(1);
 
@@ -119,7 +124,7 @@ class _GenresState extends State<Genres> {
                                               BorderRadius.circular(15),
                                           child: Image(
                                             image: AssetImage(
-                                                "Images/Background_Images/Background_4.jpg"),
+                                                "Images/Genre_Images/Genre_$r.jpg"),
                                             fit: BoxFit.fill,
                                           ),
                                         ),
