@@ -140,6 +140,43 @@ class _HomeState extends State<Home> {
                                   width: 230,
                                   // color: Colors.blue,
                                   child: TextFormField(
+                                    onEditingComplete: () {
+                                      print(sercontroller.text);
+                                      // search(sercontroller.text);
+                                      print("hello bhaiya yahan hai hum");
+                                      print(genredata.runtimeType);
+                                      String gen_here =
+                                          sercontroller.text.toLowerCase();
+                                      bool gen =
+                                          binary_Search(genredata, gen_here);
+                                      String aut_here = convertToTitleCase(
+                                          sercontroller.text.toLowerCase());
+                                      print("Auth Here---->$aut_here");
+                                      bool aut =
+                                          binary_Search(authordata, aut_here);
+                                      if (gen == true) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        ShowQuotes(
+                                                            author: "",
+                                                            genre: sercontroller
+                                                                .text)));
+                                      } else if (aut == true) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        ShowQuotes(
+                                                            author:
+                                                                sercontroller
+                                                                    .text,
+                                                            genre: "")));
+                                      } else {
+                                        showAlertDialog(context);
+                                      }
+                                    },
                                     controller: sercontroller,
                                     cursorColor: Colors.black,
                                     decoration: InputDecoration(
