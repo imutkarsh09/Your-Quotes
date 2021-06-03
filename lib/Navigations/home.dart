@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
             child: Column(
               children: [
                 Container(
-                    height: MediaQuery.of(context).size.height / 2.5,
+                    // height: MediaQuery.of(context).size.height / 2.5,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         color: Colors.blueAccent[200],
@@ -111,8 +111,12 @@ class _HomeState extends State<Home> {
                       Container(
                         child: Container(
                           height: 50,
-                          width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(40, 40, 40, 0),
+                          width: 350,
+                          margin: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.width / 15,
+                              45,
+                              MediaQuery.of(context).size.width / 15,
+                              0),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(5),
@@ -124,71 +128,83 @@ class _HomeState extends State<Home> {
                                 ),
                               ]),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                height: double.infinity,
-                                width: 260,
-                                child: TextFormField(
-                                  controller: sercontroller,
-                                  cursorColor: Colors.black,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      hintText: "Search By Genre Or By Author",
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontFamily: "Baloo",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17,
-                                      )),
+                              // SizedBox(
+                              //   width: 20,
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Container(
+                                  height: double.infinity,
+                                  width: 230,
+                                  // color: Colors.blue,
+                                  child: TextFormField(
+                                    controller: sercontroller,
+                                    cursorColor: Colors.black,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        hintText:
+                                            "Search By Genre Or By Author",
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontFamily: "Baloo",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                        )),
+                                  ),
                                 ),
                               ),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.search_outlined,
-                                    size: 30,
-                                    color: Colors.grey[700],
-                                  ),
-                                  onPressed: () {
-                                    print(sercontroller.text);
-                                    // search(sercontroller.text);
-                                    print("hello bhaiya yahan hai hum");
-                                    print(genredata.runtimeType);
-                                    String gen_here =
-                                        sercontroller.text.toLowerCase();
-                                    bool gen =
-                                        binary_Search(genredata, gen_here);
-                                    String aut_here = convertToTitleCase(
-                                        sercontroller.text.toLowerCase());
-                                    print("Auth Here---->$aut_here");
-                                    bool aut =
-                                        binary_Search(authordata, aut_here);
-                                    if (gen == true) {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  ShowQuotes(
-                                                      author: "",
-                                                      genre:
-                                                          sercontroller.text)));
-                                    } else if (aut == true) {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  ShowQuotes(
-                                                      author:
-                                                          sercontroller.text,
-                                                      genre: "")));
-                                    } else {
-                                      showAlertDialog(context);
-                                    }
-                                  })
+                              Padding(
+                                padding: const EdgeInsets.only(right: 0),
+                                child: IconButton(
+                                    icon: Icon(
+                                      Icons.search_outlined,
+                                      size: 30,
+                                      color: Colors.grey[700],
+                                    ),
+                                    onPressed: () {
+                                      print(sercontroller.text);
+                                      // search(sercontroller.text);
+                                      print("hello bhaiya yahan hai hum");
+                                      print(genredata.runtimeType);
+                                      String gen_here =
+                                          sercontroller.text.toLowerCase();
+                                      bool gen =
+                                          binary_Search(genredata, gen_here);
+                                      String aut_here = convertToTitleCase(
+                                          sercontroller.text.toLowerCase());
+                                      print("Auth Here---->$aut_here");
+                                      bool aut =
+                                          binary_Search(authordata, aut_here);
+                                      if (gen == true) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        ShowQuotes(
+                                                            author: "",
+                                                            genre: sercontroller
+                                                                .text)));
+                                      } else if (aut == true) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        ShowQuotes(
+                                                            author:
+                                                                sercontroller
+                                                                    .text,
+                                                            genre: "")));
+                                      } else {
+                                        showAlertDialog(context);
+                                      }
+                                    }),
+                              )
                             ],
                           ),
                         ),
@@ -216,13 +232,16 @@ class _HomeState extends State<Home> {
                           child: Wrap(
                             // alignment: WrapAlignment.center,
                             children: [
-                              Text(
-                                data[0]["quoteText"],
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Baloo",
-                                  fontSize: 20,
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 25),
+                                child: Text(
+                                  data[0]["quoteText"],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Baloo",
+                                    fontSize: 20,
+                                  ),
                                 ),
                               )
                             ],
