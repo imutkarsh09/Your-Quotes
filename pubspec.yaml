@@ -27,6 +27,7 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   share: ^2.0.4
   web_scraper: ^0.1.4
+  shared_preferences: ^2.0.6
 
 
   # The following adds the Cupertino Icons font to your application.

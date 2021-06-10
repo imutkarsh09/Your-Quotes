@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:yourquotes/Shared%20Preferences/input.dart';
 import 'package:yourquotes/Splash%20Screen/splash.dart';
 
 void main() async {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: Input(),
     );
   }
 }
