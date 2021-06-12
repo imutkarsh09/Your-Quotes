@@ -26,6 +26,7 @@ class _InputState extends State<Input> with SingleTickerProviderStateMixin {
 
   loadSharedPreferencesAndData() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    loadDataHere();
   }
 
   @override
@@ -72,10 +73,15 @@ class _InputState extends State<Input> with SingleTickerProviderStateMixin {
                 print(_aut.text);
                 addItem(
                     Liked(id: _id.text, quote: _quo.text, author: _aut.text));
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => InputShow()));
               },
               child: Text("Submit"),
+            ),
+            FlatButton(
+              color: Colors.blue,
+              onPressed: () {
+                loadDataHere();
+              },
+              child: Text("Load Data"),
             )
           ],
         ),
@@ -94,10 +100,20 @@ class _InputState extends State<Input> with SingleTickerProviderStateMixin {
     List<String> stringList =
         list.map((item) => json.encode(item.toMap())).toList();
     sharedPreferences.setStringList('list', stringList);
-    print("Hello Babuji");
     print(stringList);
-    // sharedPreferences.commit();
-    print("Jai Shree Ram!!");
-    print(sharedPreferences.commit());
+  }
+
+  Future<List<Liked>> loadDataHere() async {
+    print("Load Data Called");
+    List<String> listString = sharedPreferences.getStringList('list');
+    if (listString != null) {
+      setState(() {
+        print("Inside the set state");
+        list =
+            listString.map((item) => Liked.fromMap(json.decode(item))).toList();
+      });
+      print("I am here");
+      print(list);
+    }
   }
 }

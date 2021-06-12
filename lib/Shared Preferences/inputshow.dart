@@ -76,12 +76,14 @@ class _InputShowState extends State<InputShow>
     );
   }
 
-  void loadData() {
+  Future<List<Liked>> loadData() async {
     List<String> listString = sharedPreferences.getStringList('list');
     if (listString != null) {
-      list =
-          listString.map((item) => Liked.fromMap(json.decode(item))).toList();
-      setState(() {});
+      setState(() {
+        print("Inside the set state");
+        list =
+            listString.map((item) => Liked.fromMap(json.decode(item))).toList();
+      });
       print("I am here");
       print(list);
     }

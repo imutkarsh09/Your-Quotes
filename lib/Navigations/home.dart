@@ -4,6 +4,7 @@ import "package:http/http.dart" as http;
 import 'package:yourquotes/Loaders/loading.dart';
 import 'package:yourquotes/Navigations/allauthors.dart';
 import 'package:yourquotes/Navigations/allgenres.dart';
+import 'package:yourquotes/Navigations/drawer.dart';
 import 'package:yourquotes/Navigations/showQuotes.dart';
 import "package:yourquotes/Searching/search.dart";
 
@@ -77,6 +78,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     TextEditingController sercontroller = new TextEditingController();
+    GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
     List trendgenres = [
       "attitude",
       "beauty",
@@ -96,46 +98,55 @@ class _HomeState extends State<Home> {
     return data.length == 0
         ? Loader()
         : Scaffold(
+            key: _scaffoldState,
+            drawer: Drawerr(),
             body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                    // height: MediaQuery.of(context).size.height / 2.5,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: Colors.blueAccent[200],
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20))),
-                    child: Column(children: [
-                      Container(
-                        child: Container(
-                          height: 50,
-                          width: 350,
-                          margin: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.width / 15,
-                              45,
-                              MediaQuery.of(context).size.width / 15,
-                              0),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0),
-                                  blurRadius: 6.0,
+              child: Column(
+                children: [
+                  Container(
+                      // height: MediaQuery.of(context).size.height / 2.5,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: Colors.blueAccent[200],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20))),
+                      child: Column(children: [
+                        Container(
+                          child: Container(
+                            height: 50,
+                            width: 350,
+                            margin: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width / 15,
+                                45,
+                                MediaQuery.of(context).size.width / 15,
+                                0),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(0.0, 1.0),
+                                    blurRadius: 6.0,
+                                  ),
+                                ]),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // SizedBox(
+                                //   width: 20,
+                                // ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  child: IconButton(
+                                      icon: Icon(Icons.menu),
+                                      onPressed: () {
+                                        _scaffoldState.currentState
+                                            .openDrawer();
+                                      }),
                                 ),
-                              ]),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // SizedBox(
-                              //   width: 20,
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Container(
+                                Container(
                                   height: double.infinity,
                                   width: 230,
                                   // color: Colors.blue,
@@ -195,289 +206,291 @@ class _HomeState extends State<Home> {
                                         )),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 0),
-                                child: IconButton(
-                                    icon: Icon(
-                                      Icons.search_outlined,
-                                      size: 30,
-                                      color: Colors.grey[700],
-                                    ),
-                                    onPressed: () {
-                                      print(sercontroller.text);
-                                      // search(sercontroller.text);
-                                      print("hello bhaiya yahan hai hum");
-                                      print(genredata.runtimeType);
-                                      String gen_here =
-                                          sercontroller.text.toLowerCase();
-                                      bool gen =
-                                          binary_Search(genredata, gen_here);
-                                      String aut_here = convertToTitleCase(
-                                          sercontroller.text.toLowerCase());
-                                      print("Auth Here---->$aut_here");
-                                      bool aut =
-                                          binary_Search(authordata, aut_here);
-                                      if (gen == true) {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        ShowQuotes(
-                                                            author: "",
-                                                            genre: sercontroller
-                                                                .text)));
-                                      } else if (aut == true) {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        ShowQuotes(
-                                                            author:
-                                                                sercontroller
-                                                                    .text,
-                                                            genre: "")));
-                                      } else {
-                                        showAlertDialog(context);
-                                      }
-                                    }),
-                              )
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 0),
+                                  child: IconButton(
+                                      icon: Icon(
+                                        Icons.search_outlined,
+                                        size: 30,
+                                        color: Colors.grey[700],
+                                      ),
+                                      onPressed: () {
+                                        print(sercontroller.text);
+                                        // search(sercontroller.text);
+                                        print("hello bhaiya yahan hai hum");
+                                        print(genredata.runtimeType);
+                                        String gen_here =
+                                            sercontroller.text.toLowerCase();
+                                        bool gen =
+                                            binary_Search(genredata, gen_here);
+                                        String aut_here = convertToTitleCase(
+                                            sercontroller.text.toLowerCase());
+                                        print("Auth Here---->$aut_here");
+                                        bool aut =
+                                            binary_Search(authordata, aut_here);
+                                        if (gen == true) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ShowQuotes(
+                                                              author: "",
+                                                              genre:
+                                                                  sercontroller
+                                                                      .text)));
+                                        } else if (aut == true) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          ShowQuotes(
+                                                              author:
+                                                                  sercontroller
+                                                                      .text,
+                                                              genre: "")));
+                                        } else {
+                                          showAlertDialog(context);
+                                        }
+                                      }),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                          height: 50,
-                          width: double.infinity,
-                          // color: Colors.red,
-                          padding: EdgeInsets.only(top: 5, bottom: 5),
-                          child: Center(
-                            child: Text(
-                              "Quote Of The Moment",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontFamily: "Baloo",
-                                fontWeight: FontWeight.bold,
+                        Container(
+                            height: 50,
+                            width: double.infinity,
+                            // color: Colors.red,
+                            padding: EdgeInsets.only(top: 5, bottom: 5),
+                            child: Center(
+                              child: Text(
+                                "Quote Of The Moment",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontFamily: "Baloo",
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+                          child: Container(
+                            // color: Colors.yellow,
+                            child: Wrap(
+                              // alignment: WrapAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 25),
+                                  child: Text(
+                                    data[0]["quoteText"],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Baloo",
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          )),
+                          ),
+                        ),
+                      ])),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                        child: Container(
-                          // color: Colors.yellow,
-                          child: Wrap(
-                            // alignment: WrapAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 25),
-                                child: Text(
-                                  data[0]["quoteText"],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Baloo",
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ])),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        "Trending Genres",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Baloo",
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => Genres()));
-                        },
+                        padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          "See More",
+                          "Trending Genres",
                           style: TextStyle(
-                            color: Colors.blue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
                             fontFamily: "Baloo",
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                Container(
-                    width: double.infinity,
-                    // color: Colors.yellow,
-                    child: Wrap(
-                        alignment: WrapAlignment.spaceEvenly,
-                        children: List.generate(6, (index) {
-                          String gen = trendgenres[index];
-                          gen = gen[0].toUpperCase() + gen.substring(1);
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) => Genres()));
+                          },
+                          child: Text(
+                            "See More",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: "Baloo",
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                      width: double.infinity,
+                      // color: Colors.yellow,
+                      child: Wrap(
+                          alignment: WrapAlignment.spaceEvenly,
+                          children: List.generate(6, (index) {
+                            String gen = trendgenres[index];
+                            gen = gen[0].toUpperCase() + gen.substring(1);
 
-                          return Container(
-                            height: 125,
-                            width: 110,
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 6.0,
-                                  ),
-                                ]),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                ShowQuotes(
-                                                    genre: trendgenres[index],
-                                                    author: "")));
-                                  },
-                                  child: Container(
-                                    height: 85,
-                                    width: 85,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image(
-                                        image: AssetImage(
-                                            "Images/Genre_Images/${trendgenres[index]}.jpg"),
-                                        fit: BoxFit.fill,
+                            return Container(
+                              height: 125,
+                              width: 110,
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 1.0),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ]),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ShowQuotes(
+                                                      genre: trendgenres[index],
+                                                      author: "")));
+                                    },
+                                    child: Container(
+                                      height: 85,
+                                      width: 85,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image(
+                                          image: AssetImage(
+                                              "Images/Genre_Images/${trendgenres[index]}.jpg"),
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  gen,
-                                  style: TextStyle(
-                                    fontFamily: "Baloo",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    gen,
+                                    style: TextStyle(
+                                      fontFamily: "Baloo",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }))),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Text(
-                        "Trending Authors",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Baloo",
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => Authors()));
-                        },
+                                ],
+                              ),
+                            );
+                          }))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
                         child: Text(
-                          "See More",
+                          "Trending Authors",
                           style: TextStyle(
-                            color: Colors.blue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
                             fontFamily: "Baloo",
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                Container(
-                    width: double.infinity,
-                    // color: Colors.yellow,
-                    child: Wrap(
-                        alignment: WrapAlignment.spaceEvenly,
-                        children: List.generate(6, (index) {
-                          String gen = trendauthors[index];
-                          return Container(
-                            height: 125,
-                            width: 110,
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(0.0, 1.0),
-                                    blurRadius: 6.0,
-                                  ),
-                                ]),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                ShowQuotes(
-                                                    genre: "",
-                                                    author:
-                                                        trendauthors[index])));
-                                  },
-                                  child: Container(
-                                    height: 85,
-                                    width: 85,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image(
-                                        image: AssetImage(
-                                            "Images/Author_Images/${trendauthors[index]}.jpg"),
-                                        fit: BoxFit.fill,
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) => Authors()));
+                          },
+                          child: Text(
+                            "See More",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: "Baloo",
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                      width: double.infinity,
+                      // color: Colors.yellow,
+                      child: Wrap(
+                          alignment: WrapAlignment.spaceEvenly,
+                          children: List.generate(6, (index) {
+                            String gen = trendauthors[index];
+                            return Container(
+                              height: 125,
+                              width: 110,
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 1.0),
+                                      blurRadius: 6.0,
+                                    ),
+                                  ]),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  ShowQuotes(
+                                                      genre: "",
+                                                      author: trendauthors[
+                                                          index])));
+                                    },
+                                    child: Container(
+                                      height: 85,
+                                      width: 85,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image(
+                                          image: AssetImage(
+                                              "Images/Author_Images/${trendauthors[index]}.jpg"),
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  gen,
-                                  style: TextStyle(
-                                    fontFamily: "Baloo",
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    gen,
+                                    style: TextStyle(
+                                      fontFamily: "Baloo",
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }))),
-              ],
-            ),
-          ));
+                                ],
+                              ),
+                            );
+                          }))),
+                ],
+              ),
+            ));
   }
 
   showAlertDialog(BuildContext context) {
