@@ -1,6 +1,7 @@
 import 'dart:convert';
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourquotes/Loaders/loading.dart';
 import 'package:yourquotes/Navigations/allauthors.dart';
 import 'package:yourquotes/Navigations/allgenres.dart';
@@ -21,13 +22,25 @@ class _HomeState extends State<Home> {
   List data = [];
   List genredata = [];
   List authordata = [];
-
+  String _name;
+  SharedPreferences sharedPreferences;
   @override
   void initState() {
     super.initState();
+    loadDataAndSharedPrefereces();
     getJsonData();
     getGenreData();
     getAuthorData();
+  }
+
+  loadDataAndSharedPrefereces() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    String naam = sharedPreferences.getString("user");
+    setState(() {
+      print("Name is------>");
+      print(naam);
+      _name = naam;
+    });
   }
 
   Future<String> getJsonData() async {
@@ -99,7 +112,7 @@ class _HomeState extends State<Home> {
         ? Loader()
         : Scaffold(
             key: _scaffoldState,
-            drawer: Drawerr(),
+            drawer: Drawerr(name: _name),
             body: SingleChildScrollView(
               child: Column(
                 children: [

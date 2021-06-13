@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
-import 'package:yourquotes/Shared%20Preferences/input.dart';
 import 'package:yourquotes/Splash%20Screen/splash.dart';
 import 'package:yourquotes/User%20Info/userinfo.dart';
 

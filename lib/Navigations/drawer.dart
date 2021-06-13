@@ -1,6 +1,12 @@
 import "package:flutter/material.dart";
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourquotes/Shared%20Preferences/showliked.dart';
 
 class Drawerr extends StatefulWidget {
+  final String name;
+  Drawerr({
+    this.name,
+  });
   @override
   _DrawerrState createState() => _DrawerrState();
 }
@@ -8,12 +14,14 @@ class Drawerr extends StatefulWidget {
 class _DrawerrState extends State<Drawerr> {
   @override
   Widget build(BuildContext context) {
+    print("Name Recieved Here is---->");
+    print(widget.name);
     return Drawer(
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(
-              "Utkarsh Saxena",
+              widget.name,
               style: TextStyle(
                 color: Colors.black,
                 fontFamily: "Baloo",
@@ -32,24 +40,54 @@ class _DrawerrState extends State<Drawerr> {
               ),
             ),
           ),
-          liti(
+          ListTile(
+            title: Text(
               "Quote Of The Moment",
-              Icon(
-                Icons.timeline,
-                color: Colors.blue,
-              )),
-          liti(
-              "Request Name Change",
-              Icon(
-                Icons.person,
-                color: Colors.blue,
-              )),
-          liti(
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Baloo",
+              ),
+            ),
+            leading: Icon(
+              Icons.timeline,
+              color: Colors.blue,
+            ),
+            onTap: () {},
+          ),
+          ListTile(
+            title: Text(
               "Liked Quotes",
-              Icon(
-                Icons.favorite,
-                color: Colors.red,
-              )),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Baloo",
+              ),
+            ),
+            leading: Icon(
+              Icons.favorite,
+              color: Colors.red,
+            ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => ShowLiked()));
+            },
+          ),
+          ListTile(
+            title: Text(
+              "Request Name Change",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: "Baloo",
+              ),
+            ),
+            leading: Icon(
+              Icons.person,
+              color: Colors.blue,
+            ),
+            onTap: () {},
+          )
         ],
       ),
     );
