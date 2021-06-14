@@ -11,24 +11,38 @@ import 'package:yourquotes/Navigations/showQuotes.dart';
 import "package:yourquotes/Searching/search.dart";
 
 class Home extends StatefulWidget {
-  TextEditingController sercontroller = new TextEditingController();
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final String url =
+      "https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=motivational";
   final String urlgenre = "https://quote-garden.herokuapp.com/api/v3/genres";
   final String urlauthor = "https://quote-garden.herokuapp.com/api/v3/authors";
+  List data = [];
   List genredata = [];
   List authordata = [];
   String _name;
+  int r;
   SharedPreferences sharedPreferences;
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
     loadDataAndSharedPrefereces();
+    getJsonData();
     getGenreData();
     getAuthorData();
+    random();
+  }
+
+  void random() {
+    Random rnd = new Random();
+    int min = 1;
+    int max = 6;
+    r = min + rnd.nextInt(max - min);
   }
 
   loadDataAndSharedPrefereces() async {
@@ -39,6 +53,25 @@ class _HomeState extends State<Home> {
       print(naam);
       _name = naam;
     });
+  }
+
+  Future<String> getJsonData() async {
+    var response = await http.get(
+        // Encoding the URL
+        Uri.parse(url),
+        // Only accept Json response
+        headers: {"Accept": "application/json"});
+    // print(response.body);
+    setState(() {
+      var convertDatatoJson = jsonDecode(response.body);
+      print(convertDatatoJson);
+      data = convertDatatoJson["data"];
+      print(data);
+      print(" Length ----> ");
+      // print(data[1].runtimeType);
+      print(data.length);
+    });
+    return "Success";
   }
 
   Future<String> getGenreData() async {
@@ -69,12 +102,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    Random rnd = new Random();
-    int min = 1;
-    int max = 6;
-    int r = min + rnd.nextInt(max - min);
-
-    GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+    print("r is---->");
+    print(r);
+    TextEditingController sercontroller = new TextEditingController();
     List trendgenres = [
       "attitude",
       "beauty",
@@ -91,7 +121,7 @@ class _HomeState extends State<Home> {
       "Jackie Chan",
       "Jeff Bezos"
     ];
-    return authordata.length == 0
+    return data.length == 0
         ? Loader()
         : Scaffold(
             key: _scaffoldState,
@@ -102,11 +132,6 @@ class _HomeState extends State<Home> {
                   Container(
                       // height: MediaQuery.of(context).size.height / 2.5,
                       width: MediaQuery.of(context).size.width,
-                      // decoration: BoxDecoration(
-                      //     // color: Colors.blue,
-                      //     borderRadius: BorderRadius.only(
-                      //         bottomLeft: Radius.circular(20),
-                      //         bottomRight: Radius.circular(20))),
                       child: Stack(children: [
                         Container(
                           width: MediaQuery.of(context).size.width,
@@ -164,18 +189,16 @@ class _HomeState extends State<Home> {
                                     // color: Colors.blue,
                                     child: TextFormField(
                                       onEditingComplete: () {
-                                        print(widget.sercontroller.text);
+                                        print(sercontroller.text);
                                         // search(sercontroller.text);
                                         print("hello bhaiya yahan hai hum");
                                         print(genredata.runtimeType);
-                                        String gen_here = widget
-                                            .sercontroller.text
-                                            .toLowerCase();
+                                        String gen_here =
+                                            sercontroller.text.toLowerCase();
                                         bool gen =
                                             binary_Search(genredata, gen_here);
                                         String aut_here = convertToTitleCase(
-                                            widget.sercontroller.text
-                                                .toLowerCase());
+                                            sercontroller.text.toLowerCase());
                                         print("Auth Here---->$aut_here");
                                         bool aut =
                                             binary_Search(authordata, aut_here);
@@ -186,24 +209,24 @@ class _HomeState extends State<Home> {
                                                       (BuildContext context) =>
                                                           ShowQuotes(
                                                               author: "",
-                                                              genre: widget
-                                                                  .sercontroller
-                                                                  .text)));
+                                                              genre:
+                                                                  sercontroller
+                                                                      .text)));
                                         } else if (aut == true) {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder:
                                                       (BuildContext context) =>
                                                           ShowQuotes(
-                                                              author: widget
-                                                                  .sercontroller
-                                                                  .text,
+                                                              author:
+                                                                  sercontroller
+                                                                      .text,
                                                               genre: "")));
                                         } else {
                                           showAlertDialog(context);
                                         }
                                       },
-                                      controller: widget.sercontroller,
+                                      controller: sercontroller,
                                       cursorColor: Colors.black,
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
@@ -230,18 +253,16 @@ class _HomeState extends State<Home> {
                                           color: Colors.grey[700],
                                         ),
                                         onPressed: () {
-                                          print(widget.sercontroller.text);
+                                          print(sercontroller.text);
                                           // search(sercontroller.text);
                                           print("hello bhaiya yahan hai hum");
                                           print(genredata.runtimeType);
-                                          String gen_here = widget
-                                              .sercontroller.text
-                                              .toLowerCase();
+                                          String gen_here =
+                                              sercontroller.text.toLowerCase();
                                           bool gen = binary_Search(
                                               genredata, gen_here);
                                           String aut_here = convertToTitleCase(
-                                              widget.sercontroller.text
-                                                  .toLowerCase());
+                                              sercontroller.text.toLowerCase());
                                           print("Auth Here---->$aut_here");
                                           bool aut = binary_Search(
                                               authordata, aut_here);
@@ -252,8 +273,7 @@ class _HomeState extends State<Home> {
                                                             context) =>
                                                         ShowQuotes(
                                                             author: "",
-                                                            genre: widget
-                                                                .sercontroller
+                                                            genre: sercontroller
                                                                 .text)));
                                           } else if (aut == true) {
                                             Navigator.of(context).push(
@@ -261,9 +281,9 @@ class _HomeState extends State<Home> {
                                                     builder: (BuildContext
                                                             context) =>
                                                         ShowQuotes(
-                                                            author: widget
-                                                                .sercontroller
-                                                                .text,
+                                                            author:
+                                                                sercontroller
+                                                                    .text,
                                                             genre: "")));
                                           } else {
                                             showAlertDialog(context);
@@ -277,7 +297,7 @@ class _HomeState extends State<Home> {
                           // Container(
                           //     height: 50,
                           //     width: double.infinity,
-                          //     color: Colors.red,
+                          //     // color: Colors.red,
                           //     padding: EdgeInsets.only(top: 5, bottom: 5),
                           //     child: Center(
                           //       child: Text(
