@@ -97,7 +97,9 @@ class _UserInfoState extends State<UserInfo> {
                                 controller: name,
                                 cursorColor: Colors.white,
                                 onEditingComplete: () {
-                                  saveData();
+                                  if (name != null) {
+                                    saveData();
+                                  }
                                 },
                                 style: TextStyle(
                                   color: Colors.white,
@@ -142,7 +144,9 @@ class _UserInfoState extends State<UserInfo> {
                             ),
                             color: Colors.blue,
                             onPressed: () {
-                              saveData();
+                              if (name != null) {
+                                saveData();
+                              }
                             },
                           ),
                         )

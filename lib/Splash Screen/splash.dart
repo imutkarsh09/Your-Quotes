@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourquotes/Navigations/home.dart';
 import 'package:yourquotes/User%20Info/userinfo.dart';
+import 'package:flutter/scheduler.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -40,9 +41,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Timer(
         Duration(seconds: 3),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                name == "" ? UserInfo() : Home())));
+        () => name == ""
+            ? Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => UserInfo()))
+            : Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) => Home())));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
