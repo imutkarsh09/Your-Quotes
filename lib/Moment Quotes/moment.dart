@@ -1,62 +1,81 @@
 import 'dart:convert';
 import 'dart:math';
-
+import "package:http/http.dart" as http;
 import "package:flutter/material.dart";
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourquotes/Loaders/loading.dart';
+import 'package:yourquotes/Shared%20Preferences/liked.dart';
 
-import 'liked.dart';
-import 'noLiked.dart';
-
-class ShowLiked extends StatefulWidget {
-  ShowLiked({Key key}) : super(key: key);
+class Moment extends StatefulWidget {
+  const Moment({Key key}) : super(key: key);
 
   @override
-  _ShowLikedState createState() => _ShowLikedState();
+  _MomentState createState() => _MomentState();
 }
 
-class _ShowLikedState extends State<ShowLiked> {
-  List<Liked> list = new List<Liked>();
-  int page = 0;
-  bool _isLiked = true;
+class _MomentState extends State<Moment> {
+  int page = 1;
   int r = 1;
+  bool _isLiked = false;
+  List data = [];
+  List<Liked> list = new List<Liked>();
   SharedPreferences sharedPreferences;
   @override
   void initState() {
     loadSharedPreferencesAndData();
+    getJsonData();
     super.initState();
   }
 
   loadSharedPreferencesAndData() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    loadData();
+    loadDataHere();
   }
 
-  Future<List<Liked>> loadData() async {
+  Future<List<Liked>> loadDataHere() async {
+    print("Load Data Called");
     List<String> listString = sharedPreferences.getStringList('list');
     if (listString != null) {
       setState(() {
         print("Inside the set state");
         list =
             listString.map((item) => Liked.fromMap(json.decode(item))).toList();
-        _isLiked = true;
       });
-      print("Length of list is---->");
-      print(list.length);
+      print("I am here");
+      print(list);
     }
+  }
+
+  Future<String> getJsonData() async {
+    final String url =
+        "https://quote-garden.herokuapp.com/api/v3/quotes/random?genre=motivational";
+    var response =
+        await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
+    print("Response Code ${response.statusCode}");
+    print("Data Length-->${data.length}");
+    if (response.statusCode == 7) {
+      print("No Internet");
+    }
+    print("Page Is-----> $page");
+    setState(() {
+      var convertDataToJson = jsonDecode(response.body);
+      data = convertDataToJson["data"];
+      print("Data is--->");
+      print(data);
+      Random rnd = new Random();
+      int min = 1;
+      int max = 6;
+      r = min + rnd.nextInt(max - min);
+      print("r is----->$r");
+    });
+    return "Success";
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Color> coList = [
-      Color.fromRGBO(15, 12, 41, 1),
-      Color.fromRGBO(30, 94, 152, 1)
-    ];
-    print("IsLiked------>");
-    print(_isLiked);
-    return list.length == 0
-        ? NoLiked()
+    return data.length == 0
+        ? Loader()
         : Scaffold(
             // appBar: AppBar(),
             body: Stack(
@@ -84,36 +103,18 @@ class _ShowLikedState extends State<ShowLiked> {
                           height: 40,
                           width: double.infinity,
                           // color: Colors.yellow,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: IconButton(
-                                  alignment: Alignment.centerLeft,
-                                  icon: Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: IconButton(
+                              alignment: Alignment.centerLeft,
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                                child: Text(
-                                  "Your Liked Quotes",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Baloo",
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
                           )),
                     ),
                     InkWell(
@@ -133,7 +134,7 @@ class _ShowLikedState extends State<ShowLiked> {
                             alignment: WrapAlignment.center,
                             children: [
                               Text(
-                                list[page].quote,
+                                data[0]["quoteText"],
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -145,7 +146,7 @@ class _ShowLikedState extends State<ShowLiked> {
                               Padding(
                                 padding: const EdgeInsets.all(30.0),
                                 child: Text(
-                                  list[page].author,
+                                  data[0]["quoteAuthor"],
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "Baloo",
@@ -175,16 +176,10 @@ class _ShowLikedState extends State<ShowLiked> {
                                 ),
                               ),
                               onTap: () {
-                                if (page > 0) {
-                                  if (_isLiked == false) {
-                                    removeItem(page);
-                                  } else {
-                                    _isLiked = true;
-                                    setState(() {
-                                      r = getRandom();
-                                      page = page - 1;
-                                    });
-                                  }
+                                if (page > 1) {
+                                  page = page - 1;
+                                  _isLiked = false;
+                                  getJsonData();
                                 }
                               },
                             ),
@@ -229,7 +224,7 @@ class _ShowLikedState extends State<ShowLiked> {
                                     size: 25,
                                   )),
                               onTap: () {
-                                String msg = list[page].quote.toString();
+                                String msg = data[0]["quoteText"].toString();
                                 share(context, msg);
                               },
                             ),
@@ -249,20 +244,14 @@ class _ShowLikedState extends State<ShowLiked> {
                                     size: 40,
                                   )),
                               onTap: () {
-                                print("On Tap Pressed and isLiked");
-                                print(_isLiked);
-                                if (_isLiked == false) {
-                                  print("IsLiked is False");
-                                  removeItem(page);
-                                } else if (page < list.length - 1) {
-                                  print(page);
-                                  print(list.length);
-                                  _isLiked = true;
-                                  setState(() {
-                                    r = getRandom();
-                                    page = page + 1;
-                                  });
+                                if (_isLiked == true) {
+                                  addItem(Liked(
+                                      quote: data[0]["quoteText"],
+                                      author: data[0]["quoteAuthor"]));
                                 }
+                                page = page + 1;
+                                _isLiked = false;
+                                getJsonData();
                               },
                             ),
                           ),
@@ -284,23 +273,8 @@ class _ShowLikedState extends State<ShowLiked> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-  int getRandom() {
-    Random rnd = new Random();
-    int min = 1;
-    int max = 6;
-    int r = min + rnd.nextInt(max - min);
-    return r;
-  }
-
-  void removeItem(int index) {
-    print("Remove Item is Called");
-    print(index);
-    if (list.length == 2) {
-      setState(() {
-        page = 0;
-      });
-    }
-    list.removeAt(index);
+  void addItem(Liked item) {
+    list.insert(0, item);
     saveData();
   }
 
@@ -311,6 +285,5 @@ class _ShowLikedState extends State<ShowLiked> {
         list.map((item) => json.encode(item.toMap())).toList();
     sharedPreferences.setStringList('list', stringList);
     print(stringList);
-    loadData();
   }
 }

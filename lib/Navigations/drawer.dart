@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yourquotes/Moment%20Quotes/moment.dart';
+import 'package:yourquotes/Name%20Change/nachequote.dart';
 import 'package:yourquotes/Shared%20Preferences/showliked.dart';
 
 class Drawerr extends StatefulWidget {
@@ -42,7 +44,7 @@ class _DrawerrState extends State<Drawerr> {
           ),
           ListTile(
             title: Text(
-              "Quote Of The Moment",
+              "Request Random Quotes",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -50,10 +52,13 @@ class _DrawerrState extends State<Drawerr> {
               ),
             ),
             leading: Icon(
-              Icons.timeline,
+              Icons.format_quote_sharp,
               color: Colors.blue,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => Moment()));
+            },
           ),
           ListTile(
             title: Text(
@@ -86,7 +91,10 @@ class _DrawerrState extends State<Drawerr> {
               Icons.person,
               color: Colors.blue,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => NacheQuote()));
+            },
           )
         ],
       ),

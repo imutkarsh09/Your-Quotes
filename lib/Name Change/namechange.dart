@@ -2,15 +2,16 @@ import "package:flutter/material.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yourquotes/Navigations/home.dart';
 
-class UserInfo extends StatefulWidget {
-  UserInfo({Key key}) : super(key: key);
+class NameChange extends StatefulWidget {
+  const NameChange({Key key}) : super(key: key);
 
   @override
-  _UserInfoState createState() => _UserInfoState();
+  _NameChangeState createState() => _NameChangeState();
 }
 
-class _UserInfoState extends State<UserInfo> {
+class _NameChangeState extends State<NameChange> {
   String _name;
+  int width;
   TextEditingController name = new TextEditingController();
   SharedPreferences sharedPreferences;
   @override
@@ -44,24 +45,11 @@ class _UserInfoState extends State<UserInfo> {
             child: Container(
               height: MediaQuery.of(context).size.height / 1.2,
               width: MediaQuery.of(context).size.width,
+              // color: Colors.red,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    // color: Colors.yellow,
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 40, 0, 10),
-                      child: Text(
-                        "Namaste!!",
-                        style: TextStyle(
-                          fontFamily: "Baloo",
-                          color: Colors.white,
-                          fontSize: 35,
-                        ),
-                      ),
-                    ),
-                  ),
                   Container(
                     margin: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width / 11,
@@ -69,18 +57,18 @@ class _UserInfoState extends State<UserInfo> {
                         MediaQuery.of(context).size.width / 11,
                         0),
                     width: MediaQuery.of(context).size.width,
-                    // height: 200,
+                    height: 200,
                     // color: Colors.green,
                     child: Wrap(
                       alignment: WrapAlignment.center,
                       children: [
                         Text(
-                          "What should we call you?",
+                          "Please Enter Your New Requested Name",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: "Baloo",
                               color: Colors.white,
-                              fontSize: 35),
+                              fontSize: 25),
                         ),
                         SizedBox(
                           height: 20,
@@ -97,7 +85,9 @@ class _UserInfoState extends State<UserInfo> {
                                 controller: name,
                                 cursorColor: Colors.white,
                                 onEditingComplete: () {
-                                  saveData();
+                                  if (name.text != "") {
+                                    saveData();
+                                  }
                                 },
                                 style: TextStyle(
                                   color: Colors.white,
@@ -142,7 +132,9 @@ class _UserInfoState extends State<UserInfo> {
                             ),
                             color: Colors.blue,
                             onPressed: () {
-                              saveData();
+                              if (name.text != "") {
+                                saveData();
+                              }
                             },
                           ),
                         )
