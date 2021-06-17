@@ -107,38 +107,39 @@ class _NameChangeState extends State<NameChange> {
                                 )),
                           ),
                         ),
-                        SizedBox(
-                          height: 40,
-                          width: double.infinity,
-                        ),
-                        // Text("hello"),
-                        Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(70),
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: const Offset(3.0, 3.0),
-                                  blurRadius: 5.0,
-                                  spreadRadius: 2.0,
-                                ),
-                              ]),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_right_alt,
-                              size: 50,
-                            ),
-                            color: Colors.blue,
-                            onPressed: () {
-                              if (name.text != "") {
-                                saveData();
-                              }
-                            },
-                          ),
-                        )
                       ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                    width: double.infinity,
+                  ),
+                  // Text("hello"),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(70),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: const Offset(3.0, 3.0),
+                            blurRadius: 5.0,
+                            spreadRadius: 2.0,
+                          ),
+                        ]),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_right_alt,
+                        size: 50,
+                      ),
+                      color: Colors.blue,
+                      onPressed: () {
+                        print("Button is Pressed");
+                        if (name.text != "") {
+                          saveData();
+                        }
+                      },
                     ),
                   )
                 ],

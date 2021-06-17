@@ -214,6 +214,15 @@ class _ShowQuotesState extends State<ShowQuotes> {
                               onTap: () {
                                 setState(() {
                                   _isLiked = !_isLiked;
+                                  print("Liked Ho Gaya shayad");
+                                  print(_isLiked);
+                                  if (_isLiked == true) {
+                                    addItem(Liked(
+                                        quote: data[0]["quoteText"],
+                                        author: data[0]["quoteAuthor"]));
+                                  } else {
+                                    removeItem();
+                                  }
                                 });
                               },
                             ),
@@ -253,11 +262,11 @@ class _ShowQuotesState extends State<ShowQuotes> {
                                     size: 40,
                                   )),
                               onTap: () {
-                                if (_isLiked == true) {
-                                  addItem(Liked(
-                                      quote: data[0]["quoteText"],
-                                      author: data[0]["quoteAuthor"]));
-                                }
+                                // if (_isLiked == true) {
+                                //   addItem(Liked(
+                                //       quote: data[0]["quoteText"],
+                                //       author: data[0]["quoteAuthor"]));
+                                // }
                                 page = page + 1;
                                 _isLiked = false;
                                 getJsonData();
@@ -283,7 +292,15 @@ class _ShowQuotesState extends State<ShowQuotes> {
   }
 
   void addItem(Liked item) {
+    print("add item called");
     list.insert(0, item);
+    saveData();
+  }
+
+  void removeItem() {
+    print("Remove Item is Called");
+    // print();
+    list.removeAt(0);
     saveData();
   }
 
@@ -294,5 +311,6 @@ class _ShowQuotesState extends State<ShowQuotes> {
         list.map((item) => json.encode(item.toMap())).toList();
     sharedPreferences.setStringList('list', stringList);
     print(stringList);
+    loadDataHere();
   }
 }

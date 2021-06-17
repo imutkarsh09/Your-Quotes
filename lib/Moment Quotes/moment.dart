@@ -205,6 +205,13 @@ class _MomentState extends State<Moment> {
                               onTap: () {
                                 setState(() {
                                   _isLiked = !_isLiked;
+                                  if (_isLiked == true) {
+                                    addItem(Liked(
+                                        quote: data[0]["quoteText"],
+                                        author: data[0]["quoteAuthor"]));
+                                  } else {
+                                    removeItem();
+                                  }
                                 });
                               },
                             ),
@@ -244,11 +251,11 @@ class _MomentState extends State<Moment> {
                                     size: 40,
                                   )),
                               onTap: () {
-                                if (_isLiked == true) {
-                                  addItem(Liked(
-                                      quote: data[0]["quoteText"],
-                                      author: data[0]["quoteAuthor"]));
-                                }
+                                // if (_isLiked == true) {
+                                //   addItem(Liked(
+                                //       quote: data[0]["quoteText"],
+                                //       author: data[0]["quoteAuthor"]));
+                                // }
                                 page = page + 1;
                                 _isLiked = false;
                                 getJsonData();
@@ -278,6 +285,13 @@ class _MomentState extends State<Moment> {
     saveData();
   }
 
+  void removeItem() {
+    print("Remove Item is Called");
+    // print();
+    list.removeAt(0);
+    saveData();
+  }
+
   Future<bool> saveData() async {
     print("List is----->");
     print(list);
@@ -285,5 +299,6 @@ class _MomentState extends State<Moment> {
         list.map((item) => json.encode(item.toMap())).toList();
     sharedPreferences.setStringList('list', stringList);
     print(stringList);
+    loadDataHere();
   }
 }

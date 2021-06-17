@@ -177,7 +177,7 @@ class _ShowLikedState extends State<ShowLiked> {
                               onTap: () {
                                 if (page > 0) {
                                   if (_isLiked == false) {
-                                    removeItem(page);
+                                    // removeItem(page);
                                   } else {
                                     _isLiked = true;
                                     setState(() {
@@ -210,6 +210,15 @@ class _ShowLikedState extends State<ShowLiked> {
                               onTap: () {
                                 setState(() {
                                   _isLiked = !_isLiked;
+                                  if (_isLiked == true) {
+                                    addItem(
+                                        Liked(
+                                            quote: list[page].quote,
+                                            author: list[page].author),
+                                        page);
+                                  } else {
+                                    removeItem(page);
+                                  }
                                 });
                               },
                             ),
@@ -253,7 +262,7 @@ class _ShowLikedState extends State<ShowLiked> {
                                 print(_isLiked);
                                 if (_isLiked == false) {
                                   print("IsLiked is False");
-                                  removeItem(page);
+                                  // removeItem(page);
                                 } else if (page < list.length - 1) {
                                   print(page);
                                   print(list.length);
@@ -301,6 +310,11 @@ class _ShowLikedState extends State<ShowLiked> {
       });
     }
     list.removeAt(index);
+    saveData();
+  }
+
+  void addItem(Liked item, int page) {
+    list.insert(page, item);
     saveData();
   }
 
