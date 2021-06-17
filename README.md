@@ -1,6 +1,9 @@
-# yourquotes
+# YourQuotes.in
 
-A new Flutter project.
+Hello Everyone! 
+Hope you all are safe. I have recently made a Quotes App using Flutter and Dart. It fetches quotes from a vast library which can then be filtered on the basis of genres and authors. It also includes features such as liking and sharing quotes on various platforms. The liked quotes are saved and can be viewed later.
+
+Link To App Run------> https://syr.us/O4f
 
 ## Getting Started
 
