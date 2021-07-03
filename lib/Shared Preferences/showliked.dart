@@ -308,6 +308,8 @@ class _ShowLikedState extends State<ShowLiked> {
       setState(() {
         page = 0;
       });
+    } else if (index == list.length - 1) {
+      page = page - 1;
     }
     list.removeAt(index);
     saveData();
